@@ -1,18 +1,18 @@
 package com.nemoisbae.plantsalletest
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.Point
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.MotionEvent
+import android.view.Display
 import android.view.View
+import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.nemoisbae.plantsalletest.data.Struc
 import com.nemoisbae.plantsalletest.data.Type
+import com.nemoisbae.plantsalletest.ui.PlanDeSalle
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -129,13 +129,13 @@ class MainActivity : AppCompatActivity() {
                 299f,
                 Type.TABLE
             ),
-            Struc(
-                1816.3f,
-                1684.45f,
-                371f,
-                299f,
-                Type.TABLE
-            ),
+//            Struc(
+//                1816.3f,
+//                1684.45f,
+//                371f,
+//                299f,
+//                Type.TABLE
+//            ),
             Struc(
                 584.3f,
                 1201.45f,
@@ -143,62 +143,62 @@ class MainActivity : AppCompatActivity() {
                 299f,
                 Type.TABLE
             ),
-            Struc(
-                584.3f,
-                1535.45f,
-                371f,
-                299f,
-                Type.TABLE
-            ),
+//            Struc(
+//                584.3f,
+//                1535.45f,
+//                371f,
+//                299f,
+//                Type.TABLE
+//            ),
             Struc(
                 105.3f,
                 1201.45f,
                 371f,
-                633f,
+                233f,
                 Type.TABLE
             ),
             Struc(
                 2557.3f,
                 1368.45f,
                 371f,
-                633f,
+                233f,
                 Type.TABLE
             ),
-            Struc(
-                105.3f,
-                2189.45f,
-                371f,
-                299f,
-                Type.TABLE
-            ),
-            Struc(
-                508.3f,
-                2189.45f,
-                371f,
-                299f,
-                Type.TABLE
-            ),
-            Struc(
-                1136.91f,
-                2172.97f,
-                750f,
-                299f,
-                Type.WALL
-            ),
-            Struc(
-                2364.91f,
-                2091.17f,
-                750f,
-                299f,
-                Type.WALL
-            ),
-            Struc(
-                2070.31f,
-                2638.61f,
-                200f,
-                400f,
-                Type.WALL
-            ),
+//            Struc(
+//                105.3f,
+//                2189.45f,
+//                371f,
+//                299f,
+//                Type.TABLE
+//            ),
+//            Struc(
+//                508.3f,
+//                2189.45f,
+//                371f,
+//                299f,
+//                Type.TABLE
+//            ),
+//            Struc(
+//                1136.91f,
+//                2172.97f,
+//                750f,
+//                299f,
+//                Type.WALL
+//            ),
+//            Struc(
+//                2364.91f,
+//                2091.17f,
+//                750f,
+//                299f,
+//                Type.WALL
+//            ),
+//            Struc(
+//                2070.31f,
+//                2638.61f,
+//                200f,
+//                400f,
+//                Type.WALL
+//            ),
             Struc(
                 2019.31f,
                 413.61f,
@@ -206,99 +206,143 @@ class MainActivity : AppCompatActivity() {
                 400f,
                 Type.FLOWER
             ),
-            Struc(
-                545.61f,
-                2009.58f,
-                350f,
-                200f,
-                Type.FLOWER
-            ),
+//            Struc(
+//                545.61f,
+//                2009.58f,
+//                350f,
+//                200f,
+//                Type.FLOWER
+//            ),
+//            Struc(
+//                290.81f,
+//                2672.97f,
+//                371f,
+//                299f,
+//                Type.TABLE
+//            ),
             Struc(
                 1277.66f,
                 385.61f,
                 300f,
                 300f,
                 Type.FLOWER
-            ),
-            Struc(
-                290.81f,
-                2672.97f,
-                371f,
-                299f,
-                Type.TABLE
-            ),
+            )
         )
 
-        // get device dimensions
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-//        val w: Int = displayMetrics.widthPixels
-//        val h: Int = displayMetrics.heightPixels
-
-        val w: Int = 3000
-        val h: Int = 3000
-
-        val conf = Bitmap.Config.ARGB_8888 // see other conf types
-
-        val bmp = Bitmap.createBitmap(w, h, conf) // this creates a MUTABLE bitmap
-
-        val canvas = Canvas(bmp)
-
-        canvas.drawARGB(255, 255, 255, 255);
-
-        val paint = Paint()
-        paint.strokeWidth = 30F
-        paint.style = Paint.Style.FILL
-        paint.isAntiAlias = true
-        paint.isDither = true
-
-        // circle center
-        println("Width : "+displayMetrics.widthPixels)
-        var center_x = (displayMetrics.widthPixels/2).toFloat()
-        var center_y = (displayMetrics.heightPixels/2).toFloat()
-        var radius = 300F
-
-        // draw circle
-//        canvas.drawCircle(center_x, center_y, radius, paint)
-        // now bitmap holds the updated pixels
-
-        datas.forEach { data ->
-            when (data.type) {
-                Type.WALL -> {
-                    paint.color = Color.parseColor("#464646")
-                    canvas.drawRect(data.posX,
-                        data.posY,
-                        data.posX + data.width,
-                        data.posY + data.height,
-                        paint
-                    )
-                }
-                Type.TABLE -> {
-                    paint.color = Color.parseColor("#0018ff")
-                    canvas.drawRect(data.posX,
-                        data.posY,
-                        data.posX + data.width,
-                        data.posY + data.height,
-                        paint
-                    )
-                }
-                Type.FLOWER -> {
-                    paint.color = Color.parseColor("#0a4d10")
-                    canvas.drawRect(data.posX,
-                        data.posY,
-                        data.posX + data.width,
-                        data.posY + data.height,
-                        paint
-                    )
-                }
-            }
+        val display: Display = windowManager.defaultDisplay
+        val size = Point()
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealSize(size)
+        } else {
+            display.getSize(size) // correct for devices with hardware navigation buttons
         }
+
+        val w: Int = size.x
+        val h: Int = size.y
+
+
+        val scalingRatio: Float = (3000f / w)
+
+        val planDeSalle = PlanDeSalle(this, displayMetrics.widthPixels, displayMetrics.heightPixels)
+        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(planDeSalle)
+        planDeSalle.setData(datas)
+
+        var isVisible: Boolean = true
+        val layerToChange = 10
+
+        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(Button(this).apply {
+            this.setOnClickListener {
+                var result: Boolean? = null
+
+                if (isVisible) {
+                    isVisible = false
+                    result = planDeSalle.changeLayerVisibility(View.GONE, layerToChange)
+                    this.text = "SHOW LAYER $layerToChange"
+                } else {
+                    isVisible = true
+                    result = planDeSalle.changeLayerVisibility(View.VISIBLE, layerToChange)
+                    this.text = "HIDE LAYER $layerToChange"
+                }
+
+                println("Result of change visibility of layer $layerToChange: $result \r\n")
+            }
+
+            this.text = "HIDE LAYER $layerToChange"
+        })
+
+        // get device dimensions
+//        val displayMetrics = DisplayMetrics()
+//        windowManager.defaultDisplay.getMetrics(displayMetrics)
+//
+////        val w: Int = displayMetrics.widthPixels
+////        val h: Int = displayMetrics.heightPixels
+//
+//        val w: Int = 3000
+//        val h: Int = 3000
+//
+//        val conf = Bitmap.Config.ARGB_8888 // see other conf types
+//
+//        val bmp = Bitmap.createBitmap(w, h, conf) // this creates a MUTABLE bitmap
+//
+//        val canvas = Canvas(bmp)
+//
+//        canvas.drawARGB(255, 255, 255, 255);
+//
+//        val paint = Paint()
+//        paint.strokeWidth = 30F
+//        paint.style = Paint.Style.FILL
+//        paint.isAntiAlias = true
+//        paint.isDither = true
+//
+//        // circle center
+//        println("Width : "+displayMetrics.widthPixels)
+//        var center_x = (displayMetrics.widthPixels/2).toFloat()
+//        var center_y = (displayMetrics.heightPixels/2).toFloat()
+//        var radius = 300F
+//
+//        // draw circle
+////        canvas.drawCircle(center_x, center_y, radius, paint)
+//        // now bitmap holds the updated pixels
+//
+//        datas.forEach { data ->
+//            when (data.type) {
+//                Type.WALL -> {
+//                    paint.color = Color.parseColor("#464646")
+//                    canvas.drawRect(data.posX,
+//                        data.posY,
+//                        data.posX + data.width,
+//                        data.posY + data.height,
+//                        paint
+//                    )
+//                }
+//                Type.TABLE -> {
+//                    paint.color = Color.parseColor("#0018ff")
+//                    canvas.drawRect(data.posX,
+//                        data.posY,
+//                        data.posX + data.width,
+//                        data.posY + data.height,
+//                        paint
+//                    )
+//                }
+//                Type.FLOWER -> {
+//                    paint.color = Color.parseColor("#0a4d10")
+//                    canvas.drawRect(data.posX,
+//                        data.posY,
+//                        data.posX + data.width,
+//                        data.posY + data.height,
+//                        paint
+//                    )
+//                }
+//            }
+//        }
 
 
 
         // set bitmap as background to ImageView
-        this.findViewById<RelativeLayout>(R.id.imageView).background = BitmapDrawable(resources, bmp)
+//        this.findViewById<RelativeLayout>(R.id.imageView).background = BitmapDrawable(resources, bmp)
 //        this.findViewById<RelativeLayout>(R.id.imageView).setOnTouchListener(this)
 //        this.findViewById<ImageView>(R.id.imageView).visibility = View.GONE
 
