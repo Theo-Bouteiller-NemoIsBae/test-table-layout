@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.opengl.Visibility
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.nemoisbae.plantsalletest.data.Struc
@@ -15,11 +16,15 @@ import com.nemoisbae.plantsalletest.ui.objectbuilder.ObjectBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.FlowerBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.TableBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.WallBuilder
+import com.nemoisbae.plantsalletest.ui.widget.Widget
+import com.nemoisbae.plantsalletest.ui.widget.implementation.TableWidget
+import kotlin.math.roundToInt
 
 class PlanDeSalle(context: Context, private val screenWidth: Int, private val screenHeight: Int): RelativeLayout(context) {
 
 
-    private val datas: ArrayList<ObjectBuilder> = arrayListOf()
+//    private val datas: ArrayList<ObjectBuilder> = arrayListOf()
+    private val datas: ArrayList<Widget> = arrayListOf()
 
     private val ORIGIN_WIDTH: Float = 3000f
     private val ORIGIN_HEIGHT: Float = 1687f
@@ -40,15 +45,35 @@ class PlanDeSalle(context: Context, private val screenWidth: Int, private val sc
         strucs.forEach { struc ->
 
             datas.add(
-                when (struc.type) {
-                    Type.WALL -> WallBuilder(struc, 0)
-                    Type.TABLE -> TableBuilder(struc, 0)
-                    Type.FLOWER -> FlowerBuilder(struc, 0)
-                }
+//                when (struc.type) {
+//                    Type.WALL -> WallBuilder(struc, 0)
+//                    Type.TABLE -> TableBuilder(struc, 0)
+//                    Type.FLOWER -> FlowerBuilder(struc, 0)
+//                }
+                TableWidget(struc, widthScalingRation, heightScalingRation, context)
             )
         }
+        doPopulate()
+        postInvalidate()
+//        doDraw()
+    }
 
-        doDraw()
+    private fun doPopulate() {
+        datas.forEach {
+            this.addView(it, it.getLayoutParamsForAdd())
+
+            it.struc.getRecF(widthScalingRation, heightScalingRation).let { rectF ->
+//                this.addView(
+//                    it.getView(context, widthScalingRation, heightScalingRation)
+//                        .first().layout.apply {
+//                        this.x = rectF.left
+//                        this.y = rectF.top
+//                    }, ViewGroup.LayoutParams(
+//                        (rectF.right - rectF.left).roundToInt(),
+//                        (rectF.bottom - rectF.top).roundToInt()
+//                    ))
+            }
+        }
     }
 
     fun changeLayerVisibility(visibility: Int, layer: Int): Boolean {
@@ -63,39 +88,39 @@ class PlanDeSalle(context: Context, private val screenWidth: Int, private val sc
 
     private fun doDraw() {
         post {
-            placeBitmapOnImageView(getLayer())
+//            placeBitmapOnImageView(getLayer())
         }
     }
 
-    private fun getLayer(): MutableMap<Int, Bitmap> {
-        val w: Int = screenWidth.toInt()
-        val h: Int = screenHeight.toInt()
-
-        val layerBitmap: MutableMap<Int, Bitmap> = mutableMapOf()
-        val layerCanvas: MutableMap<Int, Canvas> = mutableMapOf()
-
-        val conf = Bitmap.Config.ARGB_8888 // see other conf types
-
-        layerBitmap[0] = Bitmap.createBitmap(w, h, conf).apply {
-            this.eraseColor(Color.WHITE)
-            layerCanvas[0] = Canvas(this)
-        }
-
-        datas.forEach { objectBuilder ->
-            println("check\r\n")
-            objectBuilder.getDraw(context, widthScalingRation, heightScalingRation).forEachIndexed { index, drawData ->
-                if (layerBitmap.containsKey(drawData.layer).not()) {
-                    println("layer not found create bitmap for ${drawData.layer}\r\n")
-                    layerBitmap[drawData.layer] = Bitmap.createBitmap(w, h, conf).apply {
-                        this.eraseColor(Color.TRANSPARENT)
-                        layerCanvas[drawData.layer] = Canvas(this)
-                    }
-                }
-
-                println("draw a ${objectBuilder.struc.type.name}[$index] at ${drawData.rectf} on ${drawData.layer}\r\n")
-                layerCanvas[drawData.layer]!!.drawBitmap(drawData.bitmap, null, drawData.rectf, null)
-            }
-        }
+//    private fun getLayer(): MutableMap<Int, Bitmap> {
+//        val w: Int = screenWidth.toInt()
+//        val h: Int = screenHeight.toInt()
+//
+//        val layerBitmap: MutableMap<Int, Bitmap> = mutableMapOf()
+//        val layerCanvas: MutableMap<Int, Canvas> = mutableMapOf()
+//
+//        val conf = Bitmap.Config.ARGB_8888 // see other conf types
+//
+//        layerBitmap[0] = Bitmap.createBitmap(w, h, conf).apply {
+//            this.eraseColor(Color.WHITE)
+//            layerCanvas[0] = Canvas(this)
+//        }
+//
+//        datas.forEach { objectBuilder ->
+//            println("check\r\n")
+//            objectBuilder.getDraw(context, widthScalingRation, heightScalingRation).forEachIndexed { index, drawData ->
+//                if (layerBitmap.containsKey(drawData.layer).not()) {
+//                    println("layer not found create bitmap for ${drawData.layer}\r\n")
+//                    layerBitmap[drawData.layer] = Bitmap.createBitmap(w, h, conf).apply {
+//                        this.eraseColor(Color.TRANSPARENT)
+//                        layerCanvas[drawData.layer] = Canvas(this)
+//                    }
+//                }
+//
+//                println("draw a ${objectBuilder.struc.type.name}[$index] at ${drawData.rectf} on ${drawData.layer}\r\n")
+//                layerCanvas[drawData.layer]!!.drawBitmap(drawData.bitmap, null, drawData.rectf, null)
+//            }
+//        }
 
 //        layerCanvas[3]!!.drawRect(RectF(0f, 0f, 50f, 50f), Paint().apply {
 //            this.strokeWidth = 5F
@@ -105,8 +130,8 @@ class PlanDeSalle(context: Context, private val screenWidth: Int, private val sc
 //            this.color = Color.YELLOW
 //        })
 
-        return layerBitmap
-    }
+//        return layerBitmap
+//    }
 
     private fun placeBitmapOnImageView(layerBitmap: MutableMap<Int, Bitmap>) {
         layers.clear()

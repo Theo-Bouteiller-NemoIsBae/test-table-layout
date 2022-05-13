@@ -9,15 +9,25 @@ import android.view.View
 import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.nemoisbae.plantsalletest.data.Struc
 import com.nemoisbae.plantsalletest.data.Type
+import com.nemoisbae.plantsalletest.data.reversedependance.TableObject
+import com.nemoisbae.plantsalletest.model.Note
+import com.nemoisbae.plantsalletest.model.PtxBillListItem
 import com.nemoisbae.plantsalletest.ui.PlanDeSalle
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
 
     var dX: Float = 0f
     var dY: Float = 0f
+
+    // TODO:: check car bcp spam
+    val REFRESH_API = 5
+    val REFRESH_API_TIME_UNIT = TimeUnit.SECONDS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,105 +39,120 @@ class MainActivity : AppCompatActivity() {
                 56.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 584.3f,
                 86.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 1500.3f,
                 86.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2557.3f,
                 86.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2149.3f,
                 86.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 105.3f,
                 420.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 584.3f,
                 420.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 1500.3f,
                 420.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2557.3f,
                 420.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2149.3f,
                 420.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 584.3f,
                 754.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 1190.3f,
                 904.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 1630.3f,
                 904.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2070.3f,
                 902.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 1816.3f,
                 1350.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
 //            Struc(
 //                1816.3f,
@@ -141,7 +166,8 @@ class MainActivity : AppCompatActivity() {
                 1201.45f,
                 371f,
                 299f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
 //            Struc(
 //                584.3f,
@@ -155,14 +181,16 @@ class MainActivity : AppCompatActivity() {
                 1201.45f,
                 371f,
                 233f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
             Struc(
                 2557.3f,
                 1368.45f,
                 371f,
                 233f,
-                Type.TABLE
+                Type.TABLE,
+                TableObject()
             ),
 //            Struc(
 //                105.3f,
@@ -204,7 +232,8 @@ class MainActivity : AppCompatActivity() {
                 413.61f,
                 200f,
                 400f,
-                Type.FLOWER
+                Type.FLOWER,
+                TableObject()
             ),
 //            Struc(
 //                545.61f,
@@ -225,7 +254,8 @@ class MainActivity : AppCompatActivity() {
                 385.61f,
                 300f,
                 300f,
-                Type.FLOWER
+                Type.FLOWER,
+                TableObject()
             )
         )
 
@@ -243,35 +273,34 @@ class MainActivity : AppCompatActivity() {
         val w: Int = size.x
         val h: Int = size.y
 
-
         val scalingRatio: Float = (3000f / w)
 
         val planDeSalle = PlanDeSalle(this, displayMetrics.widthPixels, displayMetrics.heightPixels)
-        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(planDeSalle)
+        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(planDeSalle, RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT))
         planDeSalle.setData(datas)
 
         var isVisible: Boolean = true
         val layerToChange = 10
 
-        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(Button(this).apply {
-            this.setOnClickListener {
-                var result: Boolean? = null
-
-                if (isVisible) {
-                    isVisible = false
-                    result = planDeSalle.changeLayerVisibility(View.GONE, layerToChange)
-                    this.text = "SHOW LAYER $layerToChange"
-                } else {
-                    isVisible = true
-                    result = planDeSalle.changeLayerVisibility(View.VISIBLE, layerToChange)
-                    this.text = "HIDE LAYER $layerToChange"
-                }
-
-                println("Result of change visibility of layer $layerToChange: $result \r\n")
-            }
-
-            this.text = "HIDE LAYER $layerToChange"
-        })
+//        this.findViewById<RelativeLayout>(R.id.imageView)?.addView(Button(this).apply {
+//            this.setOnClickListener {
+//                var result: Boolean? = null
+//
+//                if (isVisible) {
+//                    isVisible = false
+//                    result = planDeSalle.changeLayerVisibility(View.GONE, layerToChange)
+//                    this.text = "SHOW LAYER $layerToChange"
+//                } else {
+//                    isVisible = true
+//                    result = planDeSalle.changeLayerVisibility(View.VISIBLE, layerToChange)
+//                    this.text = "HIDE LAYER $layerToChange"
+//                }
+//
+//                println("Result of change visibility of layer $layerToChange: $result \r\n")
+//            }
+//
+//            this.text = "HIDE LAYER $layerToChange"
+//        })
 
         // get device dimensions
 //        val displayMetrics = DisplayMetrics()
@@ -350,5 +379,23 @@ class MainActivity : AppCompatActivity() {
 
 //        this.findViewById<ImageView>(R.id.imageView)?
 
+    }
+
+    fun loadData() {
+        val json: String = "[{\"transactionId\":20000115758,\"groupingDisplay\":\"T4\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115568,\"groupingDisplay\":\"T3\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115549,\"groupingDisplay\":\"T23\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115315,\"groupingDisplay\":\"T2\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000114061,\"groupingDisplay\":\"T1\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":8,\"tag\":\"\",\"totalIncludingTaxes\":83800,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":true}}]"
+
+        val typeToken = object: TypeToken<List<PtxBillListItem>>() {}.type
+
+        Gson().fromJson<List<PtxBillListItem>>(json, typeToken.javaClass).toNotes()
+    }
+
+    private fun List<PtxBillListItem>.toNotes(): List<Note> {
+        val list: ArrayList<Note> = arrayListOf()
+
+        this.forEach {
+            list.add(it.toNote())
+        }
+
+        return list
     }
 }

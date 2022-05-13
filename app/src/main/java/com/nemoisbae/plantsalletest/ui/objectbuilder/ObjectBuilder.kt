@@ -8,5 +8,6 @@ interface ObjectBuilder {
     val struc: Struc
     val layer: Int
 
-    fun getDraw(context: Context, widthScalingRation: Float, heightScalingRation: Float): ArrayList<DrawData>
+//    fun getDraw(context: Context, widthScalingRation: Float, heightScalingRation: Float): ArrayList<DrawData>
+    fun getView(context: Context, widthScalingRation: Float, heightScalingRation: Float): ArrayList<DrawData>
 }
