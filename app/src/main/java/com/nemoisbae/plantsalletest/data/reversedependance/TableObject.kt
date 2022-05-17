@@ -8,5 +8,5 @@ data class TableObject(
     val prochaineResa: String = "Théo",
     val nomClient: String = "Sebastien",
     val nbrAsk: Int = 1,
-    val nbrSplit: Int = 2
+    val nbrSplit: Int = 4
 ): ContentObject

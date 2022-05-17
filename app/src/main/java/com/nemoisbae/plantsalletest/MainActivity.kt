@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 371f,
                 299f,
                 Type.TABLE,
-                TableObject()
+                TableObject(name = "T4")
             ),
             Struc(
                 2557.3f,
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 371f,
                 299f,
                 Type.TABLE,
-                TableObject()
+                TableObject(name = "T3")
             ),
             Struc(
                 2149.3f,
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                 371f,
                 299f,
                 Type.TABLE,
-                TableObject()
+                TableObject(name = "T2")
             ),
             Struc(
                 105.3f,
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 371f,
                 299f,
                 Type.TABLE,
-                TableObject()
+                TableObject(name = "T1")
             ),
             Struc(
                 584.3f,
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                 371f,
                 299f,
                 Type.TABLE,
-                TableObject()
+                TableObject(name = "T23")
             ),
             Struc(
                 1500.3f,
@@ -275,7 +275,11 @@ class MainActivity : AppCompatActivity() {
 
         val scalingRatio: Float = (3000f / w)
 
-        val planDeSalle = PlanDeSalle(this, displayMetrics.widthPixels, displayMetrics.heightPixels)
+        val planDeSalle = PlanDeSalle(this, displayMetrics.widthPixels, displayMetrics.heightPixels) {
+            val temp: ArrayList<Note> = arrayListOf()
+            temp.addAll(loadData())
+            temp
+        }
         this.findViewById<RelativeLayout>(R.id.imageView)?.addView(planDeSalle, RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT))
         planDeSalle.setData(datas)
 
@@ -379,17 +383,22 @@ class MainActivity : AppCompatActivity() {
 
 //        this.findViewById<ImageView>(R.id.imageView)?
 
+        this.findViewById<Button>(R.id.button)?.setOnClickListener {
+            val temp: ArrayList<Note> = arrayListOf()
+            temp.addAll(loadData())
+            planDeSalle.refreshTable(temp)
+        }
     }
 
-    fun loadData() {
-        val json: String = "[{\"transactionId\":20000115758,\"groupingDisplay\":\"T4\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115568,\"groupingDisplay\":\"T3\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115549,\"groupingDisplay\":\"T23\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115315,\"groupingDisplay\":\"T2\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000114061,\"groupingDisplay\":\"T1\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":8,\"tag\":\"\",\"totalIncludingTaxes\":83800,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":true}}]"
+    private fun loadData(): List<Note> {
+        val json: String = "[{\"transactionId\":20000115758,\"groupingDisplay\":\"T4\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":3,\"callCount\":1,\"alert\":false}},{\"transactionId\":20000115568,\"groupingDisplay\":\"T3\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":1,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":2,\"callCount\":2,\"alert\":false}},{\"transactionId\":20000115549,\"groupingDisplay\":\"T23\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":0,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000115315,\"groupingDisplay\":\"T2\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":1,\"tag\":\"\",\"totalIncludingTaxes\":13900,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":2,\"callCount\":0,\"alert\":false}},{\"transactionId\":20000114061,\"groupingDisplay\":\"T1\",\"profitCenterId\":1,\"profitCenterName\":\"RESTAURANT\",\"posNumber\":4,\"stationId\":20,\"stationName\":\"ANDROID1\",\"waiterNumber\":3,\"numberOfBills\":0,\"guests\":8,\"tag\":\"\",\"totalIncludingTaxes\":83800,\"maxPaymentLineNumber\":0,\"customer\":null,\"busyGrouping\":{\"nextCount\":5,\"callCount\":2,\"alert\":true}}]"
 
         val typeToken = object: TypeToken<List<PtxBillListItem>>() {}.type
 
-        Gson().fromJson<List<PtxBillListItem>>(json, typeToken.javaClass).toNotes()
+        return Gson().fromJson<List<PtxBillListItem>>(json, typeToken).toNotes()
     }
 
-    private fun List<PtxBillListItem>.toNotes(): List<Note> {
+    private fun List<PtxBillListItem>.toNotes(): ArrayList<Note> {
         val list: ArrayList<Note> = arrayListOf()
 
         this.forEach {

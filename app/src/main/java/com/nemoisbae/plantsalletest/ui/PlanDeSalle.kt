@@ -6,21 +6,27 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.opengl.Visibility
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.Toast
+import androidx.core.view.forEach
 import com.nemoisbae.plantsalletest.data.Struc
 import com.nemoisbae.plantsalletest.data.Type
+import com.nemoisbae.plantsalletest.model.Note
 import com.nemoisbae.plantsalletest.ui.objectbuilder.ObjectBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.FlowerBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.TableBuilder
 import com.nemoisbae.plantsalletest.ui.objectbuilder.implementation.WallBuilder
+import com.nemoisbae.plantsalletest.ui.widget.Generic
 import com.nemoisbae.plantsalletest.ui.widget.Widget
 import com.nemoisbae.plantsalletest.ui.widget.implementation.TableWidget
 import kotlin.math.roundToInt
 
-class PlanDeSalle(context: Context, private val screenWidth: Int, private val screenHeight: Int): RelativeLayout(context) {
+class PlanDeSalle(context: Context, private val screenWidth: Int, private val screenHeight: Int, val needRefresh: ()->(ArrayList<Note>)): RelativeLayout(context) {
 
 
 //    private val datas: ArrayList<ObjectBuilder> = arrayListOf()
@@ -54,8 +60,49 @@ class PlanDeSalle(context: Context, private val screenWidth: Int, private val sc
             )
         }
         doPopulate()
+        runTimer()
+        runAutoRefresh()
         postInvalidate()
 //        doDraw()
+    }
+
+    val mainHandler = Handler(Looper.getMainLooper())
+    val autoRefreshHandler = Handler(Looper.getMainLooper())
+    val autoRefreshTimeoutInMs: Long = 10000
+
+    private fun runTimer() {
+        mainHandler.post(object : Runnable {
+            override fun run() {
+                datas.filter { it.struc.type == Type.TABLE }.forEach { (it as TableWidget).timeUpdate() }
+                mainHandler.postDelayed(this, 1000)
+            }
+        })
+    }
+
+    private fun runAutoRefresh() {
+        autoRefreshHandler.post(object : Runnable {
+            override fun run() {
+                refreshTable(needRefresh())
+                Toast.makeText(context, "REFRESH", Toast.LENGTH_SHORT).show()
+                mainHandler.postDelayed(this, autoRefreshTimeoutInMs)
+            }
+        })
+    }
+
+    fun refreshTable(notes: ArrayList<Note>) {
+        datas.filter { it.struc.type == Type.TABLE }.forEach { widget: Widget ->
+            notes.forEach noteForEach@{ note ->
+                (widget as TableWidget).let { tableWidget ->
+                    if (tableWidget.getTableName() == note.groupingDisplay) {
+                        tableWidget.refreshData(note)
+                        return@noteForEach
+                    }
+                }
+
+            }
+        }
+
+        postInvalidate()
     }
 
     private fun doPopulate() {
